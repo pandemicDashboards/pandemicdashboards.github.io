@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Add Entry</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f0f0f0;
+			margin: 0;
+			padding: 0;
+		}
+
+		.container {
+			max-width: 600px;
+			height: 67vw;
+			margin: 10px auto;
+			padding: 20px;
+			background-color: #fff;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			border-radius: 8px;
+		}
+
+		h1 {
+			color: #336699;
+
+			margin-bottom: 20px;
+		}
+
+		p {
+			margin-bottom: 20px;
+			line-height: 1.5;
+		}
+
+		.Sendemail
+		{
+			text-decoration: none;
+			color: #336699;
+			font-weight: bold;
+		}
+		form {
+			display: grid;
+			grid-gap: 20px;
+		}
+
+		label {
+			color: #336699;
+			font-weight: bold;
+		}
+
+		input[type="text"],
+		textarea {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+
+		textarea {
+			resize: vertical;
+			min-height: 100px;
+		}
+
+		.button-container {
+			text-align: center;
+		}
+
+		button {
+			background-color: #336699;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+		}
+
+		button:hover {
+			background-color: #1c4966;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<h1>Add Entry</h1>
+		<p>If you are an owner of a pandemic dashboard website, or if you find a good website and want to recommend it to us. Please feel free to send <a class="Sendemail" href="mailto:48437081@qq.com" >us</a>  
+			the website information, including the publisher name, the URL and a snapshot. We will check and include it in our website. 
+			</p>
+		<p>Thanks in advance for your contribution to this corpus!</p>
+		<!-- <a class="Sendemail">48437081@qq.com</a> -->
+
+		<!-- <form id="entryForm">
+			<label for="publisher">Publisher:</label>
+			<input type="text" id="publisher" name="publisher" required>
+
+			<label for="website-snapshot">Website Snapshot:</label>
+			<input type="file" id="website-snapshot" name="website-snapshot" accept="image/*" required>
+
+			<label for="url">URL:</label>
+			<input type="text" id="url" name="url" required>
+
+			<label for="email">Your email:</label>
+			<input type="text" id="email" name="email" required>
+
+			<div class="button-container">
+				<button type="submit">Submit</button>
+			</div>
+		</form> -->
+	</div>
+</body>
+<script>
+	const entryForm = document.getElementById('entryForm');
+	entryForm.addEventListener('submit', function (event) {
+		event.preventDefault(); 
+		const publisher = document.getElementById('publisher').value;
+		const websiteSnapshot = document.getElementById('website-snapshot').files[0]; 
+		const url = document.getElementById('url').value;
+		const email = document.getElementById('email').value;
+		entryForm.reset();
+	});
+</script>
+
+</html>
