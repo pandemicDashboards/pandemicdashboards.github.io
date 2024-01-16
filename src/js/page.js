@@ -123,7 +123,7 @@ const page = (function () {
         headerDiv.append(titleDiv);
         $('<form id="search"> <input type="search" placeholder="search ..."/> <div class="button" id="search_button">search </div> </form>').appendTo(headerDiv);
         headerDiv.append($('<div id="selectors_container"><div class="label">Selectors</div><div id="selectors"></div><div id="clear_selectors" class="button tooltip" title="clear selectors [esc]">clear</div><div style="clear: both;"></div></div>'));
-
+        console.log(extraPagesDiv)
         if (extraPages) {
             var extraPagesDiv = ($('<div id="extra_pages_list">')).appendTo(titleDiv);
             $.each(extraPages, function (pageName, pageSrc) {

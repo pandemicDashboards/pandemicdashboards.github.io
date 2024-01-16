@@ -69,8 +69,8 @@ var paper = {
  * Extra pages like an about page that will be listed in the footer an can be opened on demand (page name -> path)
  */
 var extraPages = {
-    'About': 'about.html',
-    'Entry': 'entry.html'
+    'About': 'src/about.html',
+    'Entry': 'src/entry.html'
 };
 
 /**
