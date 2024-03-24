@@ -12,97 +12,100 @@ const entryLayout = (function () {
 
             var j = 0;
             var flag = 0;
-            $.each(bib.sortedIDs, function (i, id) {
 
-                //遍历bib中的IDs 
-                if (bib.filteredEntries[id] && (j < nVisibleEntries)) {
-                    //创建entryDiv （对应的过滤词条存在 且j的大小小于可见的词条数目）
-                    if(id == 133 || id == 174 || id == 177 || id == 198 || id == 24 || id == 278 || id == 279 || id == 280 || id == 80){ return true}
-                    flag  = flag + 1;
-                    // console.log(flag)
-                    var entryDiv = createEntryDiv(id,flag);
-                    // console.log("1",entryDiv)
-                    var sparklineDiv = entryDiv.find('.sparkline');
-                    sparklineDiv.empty();
-                    // tooltipster是一种插件 应该是设置当前的那个彩色条条状态的
-                    sparklineDiv.tooltipster('destroy');
-                    //没懂
-                    selectors.vis(sparklineDiv, bib.entrySelectorSimilarities[id], true);
-                    var tooltipDiv = $('<div>');
-                    $('<h3><span class="label">sum: </span>' + id + '</h3>').appendTo(tooltipDiv);
-                    var totalSimilarity = selectors.computeTotalSimilarity(bib.entrySelectorSimilarities[id]);
-                    
-                    if (selectors.getNActiveSelectors() > 0) {
-                        //选择器
-                        $('<div><span class="label">selector agreement: </span>' + totalSimilarity.toFixed(2) + '</div>').appendTo(tooltipDiv);
-                        if (totalSimilarity > 0) {
-                            var visDiv = $('<div>', {
-                                class: 'vis'
-                            }).appendTo(tooltipDiv);
-                            selectors.vis(visDiv, bib.entrySelectorSimilarities[id]);
-                        }
-                    }
-                    sparklineDiv.tooltipster({
-                        content: tooltipDiv,
-                        theme: 'tooltipster-survis'
-                    });
-                    var greyValue = Math.round(-selectors.getTotalSimilarity(bib, id) * 200 + 200);
-                    entryDiv.css('border-color', 'rgb(' + greyValue + ',' + greyValue + ',' + greyValue + ')');
-                    
-                    if (bib.clusterAssignment && bib.clusterAssignment[id]) {
-                        //cluster 存在 就找到对应的cluster
-                        var clustersDiv = entryDiv.find('.clusters');
-                        if (clustersDiv.length == 0) {
-                            clustersDiv = $('<div>', {
-                                class: 'clusters'
-                            }).insertBefore(entryDiv.find('.footer_container'));
-                        }
-                        clustersDiv.empty();
-                        var nonDiscardedClusters = [];
-                        $.each(bib.clusterAssignment[id], function (i, clusterID) {
-                            // console.log(clusterID)
-                            var clusteringName = clusterID.substring(0, 1);
-                            if (bib.clusters[clusteringName]) {
-                                nonDiscardedClusters.push(clusterID);
+            ( async() => {
+                //等到所有的div都渲染结束然后再 移除添加按钮
+                await  $.each(bib.sortedIDs, function (i, id) {
+                    //遍历bib中的IDs 
+                    if (bib.filteredEntries[id] && (j < nVisibleEntries)) {
+                        //创建entryDiv （对应的过滤词条存在 且j的大小小于可见的词条数目）
+                        if(id == 133 || id == 174 || id == 177 || id == 198 || id == 24 || id == 278 || id == 279 || id == 280 || id == 80){ return true}
+                        flag  = flag + 1;
+                        // console.log(flag)
+                        var entryDiv = createEntryDiv(id,flag);
+                        // console.log("1",entryDiv)
+                        var sparklineDiv = entryDiv.find('.sparkline');
+                        sparklineDiv.empty();
+                        // tooltipster是一种插件 应该是设置当前的那个彩色条条状态的
+                        sparklineDiv.tooltipster('destroy');
+                        //没懂
+                        selectors.vis(sparklineDiv, bib.entrySelectorSimilarities[id], true);
+                        var tooltipDiv = $('<div>');
+                        $('<h3><span class="label">sum: </span>' + id + '</h3>').appendTo(tooltipDiv);
+                        var totalSimilarity = selectors.computeTotalSimilarity(bib.entrySelectorSimilarities[id]);
+                        
+                        if (selectors.getNActiveSelectors() > 0) {
+                            //选择器
+                            $('<div><span class="label">selector agreement: </span>' + totalSimilarity.toFixed(2) + '</div>').appendTo(tooltipDiv);
+                            if (totalSimilarity > 0) {
+                                var visDiv = $('<div>', {
+                                    class: 'vis'
+                                }).appendTo(tooltipDiv);
+                                selectors.vis(visDiv, bib.entrySelectorSimilarities[id]);
                             }
-                        });  
-                        // 我猜nonDiscardedClusters 是cluster新创建的
-                        if (nonDiscardedClusters.length > 0) {
-                            //大于零 就将label --> Cluster 加入到clustersDiv中去
-                            $('<div>', {
-                                class: 'label',
-                                text: 'Cluster'
-                            }).appendTo(clustersDiv);
-                            $.each(nonDiscardedClusters, function (i, clusterID) {
-                                var clusterDiv = $('<div>', {
-                                    class: 'cluster',
-                                    text: clusterID
-                                }).appendTo(clustersDiv);
-                                clusterDiv.click(function (event) {
-                                    ///// ???????  点一下在右边 create 的 cluster 多了绿条条
-                                    selectors.toggleSelector('cluster', clusterID, event);//设置选择器的状态
-                                });
-                            })
                         }
+                        sparklineDiv.tooltipster({
+                            content: tooltipDiv,
+                            theme: 'tooltipster-survis'
+                        });
+                        var greyValue = Math.round(-selectors.getTotalSimilarity(bib, id) * 200 + 200);
+                        entryDiv.css('border-color', 'rgb(' + greyValue + ',' + greyValue + ',' + greyValue + ')');
+                        
+                        if (bib.clusterAssignment && bib.clusterAssignment[id]) {
+                            //cluster 存在 就找到对应的cluster
+                            var clustersDiv = entryDiv.find('.clusters');
+                            if (clustersDiv.length == 0) {
+                                clustersDiv = $('<div>', {
+                                    class: 'clusters'
+                                }).insertBefore(entryDiv.find('.footer_container'));
+                            }
+                            clustersDiv.empty();
+                            var nonDiscardedClusters = [];
+                            $.each(bib.clusterAssignment[id], function (i, clusterID) {
+                                // console.log(clusterID)
+                                var clusteringName = clusterID.substring(0, 1);
+                                if (bib.clusters[clusteringName]) {
+                                    nonDiscardedClusters.push(clusterID);
+                                }
+                            });  
+                            // 我猜nonDiscardedClusters 是cluster新创建的
+                            if (nonDiscardedClusters.length > 0) {
+                                //大于零 就将label --> Cluster 加入到clustersDiv中去
+                                $('<div>', {
+                                    class: 'label',
+                                    text: 'Cluster'
+                                }).appendTo(clustersDiv);
+                                $.each(nonDiscardedClusters, function (i, clusterID) {
+                                    var clusterDiv = $('<div>', {
+                                        class: 'cluster',
+                                        text: clusterID
+                                    }).appendTo(clustersDiv);
+                                    clusterDiv.click(function (event) {
+                                        ///// ???????  点一下在右边 create 的 cluster 多了绿条条
+                                        selectors.toggleSelector('cluster', clusterID, event);//设置选择器的状态
+                                    });
+                                })
+                            }
+                        }
+                        //取出out和in 的内容
+                        var outgoingFrequencySpan = entryDiv.find('.citation_outgoing_frequency');
+                        if (outgoingFrequencySpan.length > 0) {
+                            outgoingFrequencySpan.text(bib.filteredReferences[id].referencesOutgoing ? bib.filteredReferences[id].referencesOutgoing.length : 0)
+                            //.text()  用于html内容的存取 ---> 文本内容 
+                        }
+                        var incomingFrequencySpan = entryDiv.find('.citation_incoming_frequency');
+                        if (incomingFrequencySpan.length > 0) {
+                            incomingFrequencySpan.text(bib.filteredReferences[id].referencesIncoming ? bib.filteredReferences[id].referencesIncoming.length : 0)
+                        }
+                        //将resultBody 存入entryDiv中
+                        entryDiv.appendTo(resultBodyDiv);
+                        //将entryDiv内容显示
+                        entryDiv.show();
+                        j++;
                     }
-                    //取出out和in 的内容
-                    var outgoingFrequencySpan = entryDiv.find('.citation_outgoing_frequency');
-                    if (outgoingFrequencySpan.length > 0) {
-                        outgoingFrequencySpan.text(bib.filteredReferences[id].referencesOutgoing ? bib.filteredReferences[id].referencesOutgoing.length : 0)
-                        //.text()  用于html内容的存取 ---> 文本内容 
-                    }
-                    var incomingFrequencySpan = entryDiv.find('.citation_incoming_frequency');
-                    if (incomingFrequencySpan.length > 0) {
-                        incomingFrequencySpan.text(bib.filteredReferences[id].referencesIncoming ? bib.filteredReferences[id].referencesIncoming.length : 0)
-                    }
-                    //将resultBody 存入entryDiv中
-                    entryDiv.appendTo(resultBodyDiv);
-                    //将entryDiv内容显示
-                    entryDiv.show();
-                    j++;
-                }
-            });
-            //找到移除active部分
+                });
+
+                  //找到移除active部分
             resultBodyDiv.find('.active').removeClass('active');
             $.each(selectors.getActiveTags('keywords'), function (tag) {
                 resultBodyDiv.find('.tag[value="' + tag + '"]').addClass('active');
@@ -112,9 +115,11 @@ const entryLayout = (function () {
                 var authorValue = tagUtil.simplifyTag(tag);
                 resultBodyDiv.find('.author[value="' + authorValue + '"]').addClass('active');
             });
+
             //移除 more和all的 entries 
             $('#show_more_entries').remove();
             $('#show_all_entries').remove();
+
             if (nVisibleEntries < Object.keys(bib.entries).length) {
                 //bib 中的条款少于规定数量
                 //获取按钮 button 插入resultBodyDiv
@@ -137,6 +142,13 @@ const entryLayout = (function () {
                     //点击showAllDiv 进行更新
                 });
             }
+            }
+            )()
+            
+
+           
+             
+          
         }
     };
     // 将图片img footer EntryMainDiv 加入到entryDiv  --> 就是右边的div啦 
@@ -164,7 +176,7 @@ const entryLayout = (function () {
             var ID_text = id + "text"
             var tooltipSpan = $('<div>',{
                 class: "tooltipText" ,
-                id: ID_text ,
+                id: ID_text , 
                 left:"-40%",
                 top: "10px", /* 调整下移的像素值 */
                
